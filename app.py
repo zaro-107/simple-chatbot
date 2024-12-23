@@ -1,35 +1,36 @@
-import pandas as pd
-import numpy as np
-import pickle as pk
-import streamlit as st
+from flask import Flask, render_template, request
 
-model = pk.load(open('model.pkl','rb'))
-st.header('Car price prediction Ml Model')
-car_data = pd.raed_csv('car data - Copy.csv')
+app = Flask(__name__)
 
-def get_brand_name(car_name):
-    car_name = car_name.split(" ")[0]
-    return car_name.strip()
-car_data['Car_name'] = car_data['Car_name'].apply(get_brand_name)
-name=st.slectbox = ('Select Car Brand',car_data[Car_name])
-year=st.slider('car manufactured year',2000,2019)
-km_driven=st.slider('No.of kms driven',11,200000)
-fuel=st.selectbox('Fuel type',car_data['Fuel_Type'].unique())
-owner=st.selectbox('seler type',car_data['Seller_Type'].unique())
-transmission=st.selectbox('Transmission',car_data['transmisson'].unique())
-seats=st.slider('NO. of seats',5,10)
+responses = {
+    "hello": "Hi there! How can I assist you?",
+    "hi": "Hello! How can I help you today?",
+    "how are you": "I'm just a program, but I'm doing well! How about you?",
+    "your name": "I'm ChatBot, your helpful assistant.",
+    "what is your name": "You can call me ChatBot.",
+    "bye": "Goodbye! Take care!",
+    "hello": "Hi there! How can I assist you?",
+    "hi": "Hello! How can I help you today?",
+    "how are you": "I'm just a program, but I'm doing well! How about you?",
+    "your name": "I'm ChatBot, your helpful assistant.",
+    "what is your name": "You can call me ChatBot.",
+    "time": "I can't tell time yet, but you can try asking me in a different version!",
+    "bye": "Goodbye! Take care!",
+    "what's up": "I'm good! What about you?",
+    "who is your creator": "My creator is none other than human ingenuity!",
+    "which religion is best": "Sorry, I don't have a relevant answer for that.",
+    "thank you": "You're welcome!",
+    "how_are_you": "I'm just a bot, but I'm functioning perfectly!",    
+}
 
+@app.route("/")
+def home():
+    return render_template("index.html")
 
-if st.button("Predict"):
-    input_data_model = pd.DataFrame({
-    'Year': [Year],
-    'Present_Price': [Present_Price],
-    'Kms_Driven': [Kms_Driven],
-    'Fuel_Type': [Fuel_Type],
-    'Seller_Type': [],
-    'Transmission': [Transmission],
-    'Owner': [Owner],
-    'car_name': [car_name]
-})
-st.write(input_data_model)
+@app.route("/get", methods=["GET", "POST"])
+def chatbot_response():
+    user_input = request.args.get("msg").lower()
+    return responses.get(user_input, "I'm sorry, I don't understand that.")
 
+if __name__ == "__main__":
+    app.run(debug=True)
